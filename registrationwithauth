@@ -1,1 +1,43 @@
 
+<?php
+session_start();
+include 'config/dbcon.php';
+if(isset($_POST['register']))
+{    
+     $name = mysqli_real_escape_string($con,$_POST['name']);
+     $email= mysqli_real_escape_string($con,$_POST['email']);
+     $mobile = mysqli_real_escape_string($con,$_POST['mobile']);
+	 $password = mysqli_real_escape_string($con,$_POST['password']);
+	 $c_password = mysqli_real_escape_string($con,$_POST['c_password']);
+     if(mysqli_real_escape_string($con,$_POST['password']) === mysqli_real_escape_string($con,$_POST['c_password']))
+	 {
+		 $checkemail = "SELECT email FROM login WHERE email = '$email'";
+		 $checkmail_run = mysqli_query($con,$checkemail);
+		 if(mysqli_num_rows($checkmail_run) > 0)
+		 {
+			 $_SESSION['message'] = "Email id is already registered";
+			 header('location:register.php');
+			 exit();
+		 }
+		 else
+		 {
+			$sql = "INSERT INTO login (name,email,mobile,password) VALUES('$name','$email','$mobile','$password')";		 
+			if(mysqli_query($con, $sql))
+			{
+				$_SESSION['message'] = "User Added please login";
+				header('location:login.php');			 
+			}
+			
+	     }
+	 		 		
+		}else
+			{
+				$_SESSION['message'] = "Password and Confirm Password does not Matched ";	
+			    header('location:register.php');
+	     	}	
+		
+	}
+		
+
+?>
+
