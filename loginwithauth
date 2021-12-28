@@ -1,0 +1,18 @@
+<?php  
+    session_start();
+    include 'config/dbcon.php';
+
+    if(isset($_POST['main_user_login'])){
+        $result = $con->query("select * from login where email = '".mysqli_real_escape_string($con, stripcslashes($_POST['main_user_login']))."' and password = '".mysqli_real_escape_string($con, stripcslashes($_POST['main_user_pass']))."'");  
+
+        if($result->num_rows == 1){ 
+            $data = $result->fetch_assoc();
+            $_SESSION['user_email']=$data['email'];
+            echo "<script>window.open('index.php','_self')</script>" ;
+        }  
+        else{  
+            $_SESSION['message'] = "Login failed. Invalid email or password";
+            header('location:login.php'); 
+        }     
+    }
+?>  
